@@ -86,15 +86,16 @@ app.post('/users/create', function(req, res) {
 }); // end app delete
 
 // View a User
-app.get('/users/:id', function(req, res) {
-    db.all('SELECT * FROM users WHERE id = {{id}};', function(err, users) {
-        var id = req.params.id;
-        var template = fs.readFileSync('./views/edit-users.html', 'utf-8'); // load HTML template
-        htmlTemplate = mustache.render(template, {
-            "users": users
-        });
+app.get    ('/users/:id', function(req, res) {
+    var id = req.params.id;
+    
+    db.all('SELECT * FROM users WHERE id = "'+ id + '";', function(err, users) {
+    htmlTemplate = mustache.render(templates.edit_user(), {
+        "templates": templates,
+        "users": users
+    });
 
-        res.send(htmlTemplate);
+    res.send(htmlTemplate);
 
     }); // end DB Select
 
@@ -102,7 +103,17 @@ app.get('/users/:id', function(req, res) {
 
 // Edit  a User
 app.put('/users/edit/:id', function(req, res) {
-
+    
+    var id = req.params.id;
+    var userStatus;
+    if (req.body.userStatus === undefined){
+       userStatus = "inactive";
+    }
+    else {
+       userStatus = req.body.userStatus;
+    }
+    console.log(userStatus)
+    db.run("UPDATE users SET name =  '" + req.body.userName + "', email =  '" + req.body.userEmail +  "', status =  '" + userStatus + "' WHERE id = " + id + ";");
     res.redirect(301, '/users');
 
 }); // end app put

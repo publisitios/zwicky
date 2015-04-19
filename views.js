@@ -27,7 +27,7 @@ module.exports = {
     var template = fs.readFileSync('./views/view-users.html', 'utf-8'); // load HTML template
     return template;
   },
-  edit_users: function() {
+  edit_user: function() {
     var template = fs.readFileSync('./views/edit-users.html', 'utf-8'); // load HTML template
     return template;
   },
