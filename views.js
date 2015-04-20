@@ -31,12 +31,29 @@ module.exports = {
     var template = fs.readFileSync('./views/edit-users.html', 'utf-8'); // load HTML template
     return template;
   },
-  categories: function() {
+  view_categories: function() {
     var template = fs.readFileSync('./views/categories.html', 'utf-8'); // load HTML template
     return template;
   },
-  articles: function() {
-    var template = fs.readFileSync('./views/article.html', 'utf-8'); // load HTML template
+  edit_category: function() {
+    var template = fs.readFileSync('./views/edit-category.html', 'utf-8'); // load HTML template
+    return template;
+  },  
+  create_article: function() {
+    var template = fs.readFileSync('./views/create-article.html', 'utf-8'); // load HTML template
+    return template;
+  },
+  view_articles: function() {
+    var template = fs.readFileSync('./views/view-articles.html', 'utf-8'); // load HTML template
+    return template;
+  },
+  view_article: function() {
+    var template = fs.readFileSync('./views/view-article.html', 'utf-8'); // load HTML template
+    return template;
+  },
+    edit_article: function() {
+    var template = fs.readFileSync('./views/edit-article.html', 'utf-8'); // load HTML template
     return template;
   }
+
 };

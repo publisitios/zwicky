@@ -1,48 +1,53 @@
 {{{templates.header}}}
 
 <!-- there is 9 bootstrap columns max width -->
+ <script src="../marked.js"></script>
         <div class="span4">
 
-            <h1>Articles</h1>
+            <h1>View Article</h1>
    <p>Articles are documents created by editors and are written in Markdown format. Markdown makes it very easy to read, write, and edit documents. Articles are rendered as HTML a a publishing format; howvever Markdown is the writing format.</p>
    
         </div>
 
 <div class="span5">
-<br/><br/><br/>
-
-   <form action = "/articles/create" method="GET">
- 
- <button type="submit" class="btn btn-primary btn-large">Write an Article</button>
+   <form action = "/articles/edit/{{id}}" method="GET">
+ <br/><br/><br/>
+  <button type="submit" class="btn btn-primary btn-large">Edit This Article</button>
 </form>
      
 </div>
 
 <div class="span9">
-    <h3>View Articles</h3>
-      <table class="table table-hover">
+{{#article}}
+    <h3>{{title}}</h3>
+      <table class="table">
             <tr>
-               <th>Title</th>
                <th>Category </th>
-               <th>Editor </th>
+               <th>Author </th>
                <th>Created</th>
                <th>Modified</th>
                <th>Status</th>
             </tr>
-{{#articles}}
-<tr>
-               <td><a title="Click to view this article" href="/articles/{{id}}">{{title}}</a></td>
+
+            <tr>
                <td>{{category_id}}</td>
                <td>{{author_id}}</td>
                <td>{{created}}</td>
                <td>{{modified}}</td>
                <td><span class="label">{{published}}</span></td>
-               
             </tr>
 
-{{/articles}}
+            <tr>
+
+            <td colspan="5"> 
+            <div id="content"></div>
+            <script>document.getElementById('content').innerHTML =
+      marked('{{content}}');
+  </script></td>
+            </tr>
 
 </table>
+{{/article}}
 </div>
 
 {{{templates.footer}}}

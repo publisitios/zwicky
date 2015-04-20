@@ -1,0 +1,37 @@
+{{{templates.header}}}
+
+<!-- there is 9 bootstrap columns max width -->
+        <div class="span4">
+
+              <h1>Categories</h1>
+              <p>Categories represent the different projects and topics for which documentation is created. Categories hold documents assigned to related to the same topic. </p>     
+        </div>
+
+<div class="span5">
+{{#category}}
+  <h3>Update Category</h3>
+            <form action = "/categories/edit/{{id}}?_method=PUT" method="POST">
+            <input type="hidden" name="id" value="{{id}}" />
+  <div class="form-group">
+    <label for="Name">Category Name</label>
+    <input type="text" class="form-control" name="catName" value="{{name}}" required />
+  </div>
+
+  <div >
+    <label for="Notes">Notes</label>
+    <div class="input-group">
+    <input type="text" class="form-control" name="catNotes" value="{{notes}}" required />
+  </div>
+  </div>
+
+  <div class="checkbox">
+    <label>
+      <input value = "active" checked type="checkbox" name="catStatus"> Category is Active
+    </label>
+  </div>
+  <button type="submit" class="btn btn-info">Update Category</button>
+</form>
+ {{/category}}    
+</div>
+
+{{{templates.footer}}}

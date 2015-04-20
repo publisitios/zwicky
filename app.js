@@ -7,7 +7,8 @@ var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var request = require('request');
-
+var marked = require('marked');
+// SQLite conection 
 var db = new sqlite3.Database('./zwicky.db');
 var app = express();
 app.use(morgan('dev'));
@@ -76,7 +77,13 @@ app.post('/users/create', function(req, res) {
 
     userName = req.body.userName;
     userEmail = req.body.userEmail;
-    userStatus = req.body.userStatus;
+    
+    if (req.body.userStatus === undefined){
+       userStatus = "inactive";
+    }
+    else {
+       userStatus = req.body.userStatus;
+    }
 
     db.run("INSERT INTO users (name, email, status) VALUES ('" + userName + "','" + userEmail + "','" + userStatus + "');");
 
@@ -112,7 +119,7 @@ app.put('/users/edit/:id', function(req, res) {
     else {
        userStatus = req.body.userStatus;
     }
-    console.log(userStatus)
+    console.log(userStatus);
     db.run("UPDATE users SET name =  '" + req.body.userName + "', email =  '" + req.body.userEmail +  "', status =  '" + userStatus + "' WHERE id = " + id + ";");
     res.redirect(301, '/users');
 
@@ -132,51 +139,128 @@ app.delete('/users/delete/:id', function(req, res) {
 //View Articles
 app.get('/articles', function(req, res) {
 
-    var template = fs.readFileSync('./views/view-articles.html', 'utf-8'); // load HTML template
-    htmlTemplate = mustache.render(template, {
+    db.all('SELECT * FROM articles;', function(err, articles) {
 
-    }); // end mustache
+    htmlTemplate = mustache.render(templates.view_articles(), {
+        "templates": templates,
+        "articles": articles
+    });
 
-    res.send(htmlTemplate);
+        res.send(htmlTemplate);
+
+    }); // end DB Select
+
+}); // end app get
+
+
+// Create Article
+app.get('/articles/create', function(req, res) {
+
+db.all('SELECT * FROM users ;', function(err, users) {   
+db.all('SELECT * FROM categories ;', function(err, categories) {    
+    console.log(users);
+    console.log(categories);
+    htmlTemplate = mustache.render(templates.create_article(), {
+        "templates": templates,
+        "users": users,
+        "categories": categories
+    });
+
+        res.send(htmlTemplate);
+}); // end DB Select
+}); // end DB Select
+}); // end app get
+
+
+app.post('/articles/create', function(req, res) {
+
+    var currentDate = new Date();
+    var day = currentDate.getDate();
+    if(day < 10) day = "0" + day;
+    var month = currentDate.getMonth() + 1;
+    if(month < 10) month = "0" + month;
+    var year = currentDate.getFullYear();
+    var dateValue = (year + "-" + month + "-" + day);
+
+    var published;
+    if (req.body.published === undefined){
+       published = "inactive";
+    }
+    else {
+       published = req.body.published;
+    }
+
+    db.run("INSERT INTO articles (title, author_id, category_id, content, published, created, modified) VALUES ('" + req.body.title + "','" + req.body.author_id + "','" + req.body.category_id + "','" + req.body.content + "','" + published + "','" + dateValue+ "','" +dateValue+"');");
+
+    res.redirect(301, '/articles');
+
 
 }); // end app get
 
 //View Single Article
 app.get('/articles/:id', function(req, res) {
+var id = req.params.id;
+db.all("SELECT * FROM articles WHERE id = '" + id + "';", function(err, article) {
+    console.log(article);
+    htmlTemplate = mustache.render(templates.view_article(), {
+        "templates": templates,
+        "article": article,
+        "id": id
+    });
 
-    var template = fs.readFileSync('./views/article.html', 'utf-8'); // load HTML template
+        res.send(htmlTemplate);
 
-    htmlTemplate = mustache.render(template, {
-
-    }); // end mustache
-
-    res.send(htmlTemplate);
+    }); // end DB Select
 
 }); // end app get
 
-// Create Article
-app.post('/articles/create', function(req, res) {
-
-    var template = fs.readFileSync('./views/create-article.html', 'utf-8'); // load HTML template
-    
-    htmlTemplate = mustache.render(template, {
-
-    }); // end mustache
-
-    res.send(htmlTemplate);
-
-}); // end app post
-
 // Edit Article
-app.put('/articles/:id', function(req, res) {
+app.get('/articles/edit/:id', function(req, res) {
 
-    var template = fs.readFileSync('./views/manage-articles.html', 'utf-8'); // load HTML template
-    
-    htmlTemplate = mustache.render(template, {
+var id = req.params.id;
+db.all("SELECT * FROM articles WHERE id = '" + id + "';", function(err, article) {
+    db.all('SELECT * FROM users ;', function(err, users) {   
+db.all('SELECT * FROM categories ;', function(err, categories) {
+    console.log(article);
+    htmlTemplate = mustache.render(templates.edit_article(), {
+        "templates": templates,
+        "article": article,
+        "users": users,
+        "categories": categories,
+        "id": id
+    });
 
-    }); // end mustache
+        res.send(htmlTemplate);
 
-    res.send(htmlTemplate);
+    }); // end DB Select
+}); // end DB Select
+    }); // end DB Select
+
+}); // end app get
+
+
+// Update an Article
+app.put('/articles/edit/:id', function(req, res) {
+    var id = req.params.id;
+
+    var currentDate = new Date();
+    var day = currentDate.getDate();
+    if(day < 10) day = "0" + day;
+    var month = currentDate.getMonth() + 1;
+    if(month < 10) month = "0" + month;
+    var year = currentDate.getFullYear();
+    var dateValue = (year + "-" + month + "-" + day);
+
+    var published;
+    if (req.body.published === undefined){
+       published = "inactive";
+    }
+    else {
+       published = req.body.published;
+    }
+
+    db.run("UPDATE articles SET title =  '" + req.body.title + "', author_id =  '" + req.body.author_id +  "', category_id =  '" + req.body.category_id + "', modified = '" + dateValue + "', created = '" + req.body.created + "', content = '" + req.body.content+ "', published = '" + published+ "' WHERE id = " + id + ";");
+    res.redirect(301, '/articles/'+id);
 
 }); // end app put
 
@@ -191,51 +275,75 @@ app.delete('/articles/:id', function(req, res) {
 
 //View Categories
 app.get('/categories', function(req, res) {
-
-    var template = fs.readFileSync('./views/categories.html', 'utf-8'); // load HTML template
     
-    htmlTemplate = mustache.render(template, {
+    db.all('SELECT * FROM categories ;', function(err, categories) {
 
-    }); // end mustache
+    htmlTemplate = mustache.render(templates.view_categories(), {
+        "templates": templates,
+        "categories": categories
+    });
 
-    res.send(htmlTemplate);
+        res.send(htmlTemplate);
 
-}); // end app get
+    }); // end DB Select
 
-//View Articles Within a Category
-app.get('/categories/:id', function(req, res) {
-
-    var template = fs.readFileSync('./views/categories.html', 'utf-8'); // load HTML template
-  
-    htmlTemplate = mustache.render(template, {
-
-    }); // end mustache
-
-    res.send(htmlTemplate);
 
 }); // end app get
 
 // Create a Category
 app.post('/categories/create', function(req, res) {
 
-    var template = fs.readFileSync('./views/create-category.html', 'utf-8'); // load HTML template
-    
-    htmlTemplate = mustache.render(template, {
+    var catStatus;
+    if (req.body.catStatus === undefined){
+       catStatus = "inactive";
+    }
+    else {
+       catStatus = req.body.catStatus;
+    }
 
-    }); // end mustache
+    db.run("INSERT INTO categories (name, notes, status) VALUES ('" + req.body.catName + "','" + req.body.catNotes + "','" + catStatus + "');");
 
-    res.send(htmlTemplate);
+    res.redirect(301, '/categories');
 
 }); // end app post
 
+//View  a Category
+app.get('/categories/:id', function(req, res) {
+
+ var id = req.params.id;
+    
+    db.all('SELECT * FROM categories WHERE id = "'+ id + '";', function(err, category) {
+    htmlTemplate = mustache.render(templates.edit_category(), {
+        "templates": templates,
+        "category": category
+    });
+
+    res.send(htmlTemplate);
+
+    }); // end DB Select
+
+}); // end app get
+
 // Edit a Category
-app.put('/categories/:id', function(req, res) {
+app.put('/categories/edit/:id', function(req, res) {
+    var id = req.params.id;
+    var catStatus;
+    if (req.body.catStatus === undefined){
+       catStatus = "inactive";
+    }
+    else {
+       catStatus = req.body.catStatus;
+    }
+    db.run("UPDATE categories SET name = '" + req.body.catName + "', notes =  '" + req.body.catNotes +  "', status =  '" + catStatus + "' WHERE id = " + id + ";");
     res.redirect(301, '/categories');
+
 }); // end app put
 
 // Delete an Category
-app.delete('/categories/:id', function(req, res) {
-    res.redirect(301, '/categories');
+app.delete('/categories/delete/:id', function(req, res) {
+    var id = req.params.id;
+    db.run("DELETE FROM categories WHERE id = " + id + ";");
+    res.redirect('/categories');
 }); // end app delete
 
 
