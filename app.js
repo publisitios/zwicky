@@ -1,3 +1,9 @@
+// Include App Config
+var config = require('./config.js');
+
+// Include Templating Logic
+var templates = require("./views.js");
+
 // load application dependencies 
 var express = require('express');
 var sqlite3 = require('sqlite3');
@@ -8,17 +14,27 @@ var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var request = require('request');
 var marked = require('marked');
+var sendgrid = require("sendgrid")(config.sendgrid_api_user, config.sendgrid_api_key);
+
 // SQLite conection 
 var db = new sqlite3.Database('./zwicky.db');
-var app = express();
-app.use(morgan('dev'));
-app.use(bodyParser.urlencoded({
-    extended: false
-}));
-app.use(methodOverride('_method'));
 
-// Include Templating Logic
-var templates = require("./views.js");
+// Express
+var app = express();
+    app.use(morgan('dev'));
+    app.use(bodyParser.urlencoded({
+        extended: false
+    }));
+    app.use(methodOverride('_method'));
+
+    // static routes for calling bootstrap
+    app.use(express.static(__dirname + '/bootstrap'));
+
+    app.listen(8080, function() {
+        console.log("LISTENING ON PORT 8080!");
+    }); 
+
+// CONTENT PAGES ROUTES
 
 // Homepage
 app.get('/', function(req, res) {
@@ -26,9 +42,8 @@ app.get('/', function(req, res) {
     htmlTemplate = mustache.render(templates.index(), {
         "templates": templates
     });
-
+    
     res.send(htmlTemplate);
-
 
 }); // end app get
 
@@ -54,7 +69,8 @@ app.get('/markdown', function(req, res) {
 
 }); // end app get
 
-// Users 
+
+// USER MODULE ROUTES
 
 // Manage Users
 app.get('/users', function(req, res) {
@@ -89,7 +105,6 @@ app.post('/users/create', function(req, res) {
 
     res.redirect(301, '/users');
 
-
 }); // end app delete
 
 // View a User
@@ -119,8 +134,9 @@ app.put('/users/edit/:id', function(req, res) {
     else {
        userStatus = req.body.userStatus;
     }
-    console.log(userStatus);
+
     db.run("UPDATE users SET name =  '" + req.body.userName + "', email =  '" + req.body.userEmail +  "', status =  '" + userStatus + "' WHERE id = " + id + ";");
+    
     res.redirect(301, '/users');
 
 }); // end app put
@@ -134,159 +150,22 @@ app.delete('/users/delete/:id', function(req, res) {
 
 }); // end app delete
 
-// Articles 
 
-//View Articles
-app.get('/articles', function(req, res) {
-
-    db.all('SELECT * FROM articles;', function(err, articles) {
-
-    htmlTemplate = mustache.render(templates.view_articles(), {
-        "templates": templates,
-        "articles": articles
-    });
-
-        res.send(htmlTemplate);
-
-    }); // end DB Select
-
-}); // end app get
-
-
-// Create Article
-app.get('/articles/create', function(req, res) {
-
-db.all('SELECT * FROM users ;', function(err, users) {   
-db.all('SELECT * FROM categories ;', function(err, categories) {    
-    console.log(users);
-    console.log(categories);
-    htmlTemplate = mustache.render(templates.create_article(), {
-        "templates": templates,
-        "users": users,
-        "categories": categories
-    });
-
-        res.send(htmlTemplate);
-}); // end DB Select
-}); // end DB Select
-}); // end app get
-
-
-app.post('/articles/create', function(req, res) {
-
-    var currentDate = new Date();
-    var day = currentDate.getDate();
-    if(day < 10) day = "0" + day;
-    var month = currentDate.getMonth() + 1;
-    if(month < 10) month = "0" + month;
-    var year = currentDate.getFullYear();
-    var dateValue = (year + "-" + month + "-" + day);
-
-    var published;
-    if (req.body.published === undefined){
-       published = "inactive";
-    }
-    else {
-       published = req.body.published;
-    }
-
-    db.run("INSERT INTO articles (title, author_id, category_id, content, published, created, modified) VALUES ('" + req.body.title + "','" + req.body.author_id + "','" + req.body.category_id + "','" + req.body.content + "','" + published + "','" + dateValue+ "','" +dateValue+"');");
-
-    res.redirect(301, '/articles');
-
-
-}); // end app get
-
-//View Single Article
-app.get('/articles/:id', function(req, res) {
-var id = req.params.id;
-db.all("SELECT * FROM articles WHERE id = '" + id + "';", function(err, article) {
-    console.log(article);
-    htmlTemplate = mustache.render(templates.view_article(), {
-        "templates": templates,
-        "article": article,
-        "id": id
-    });
-
-        res.send(htmlTemplate);
-
-    }); // end DB Select
-
-}); // end app get
-
-// Edit Article
-app.get('/articles/edit/:id', function(req, res) {
-
-var id = req.params.id;
-db.all("SELECT * FROM articles WHERE id = '" + id + "';", function(err, article) {
-    db.all('SELECT * FROM users ;', function(err, users) {   
-db.all('SELECT * FROM categories ;', function(err, categories) {
-    console.log(article);
-    htmlTemplate = mustache.render(templates.edit_article(), {
-        "templates": templates,
-        "article": article,
-        "users": users,
-        "categories": categories,
-        "id": id
-    });
-
-        res.send(htmlTemplate);
-
-    }); // end DB Select
-}); // end DB Select
-    }); // end DB Select
-
-}); // end app get
-
-
-// Update an Article
-app.put('/articles/edit/:id', function(req, res) {
-    var id = req.params.id;
-
-    var currentDate = new Date();
-    var day = currentDate.getDate();
-    if(day < 10) day = "0" + day;
-    var month = currentDate.getMonth() + 1;
-    if(month < 10) month = "0" + month;
-    var year = currentDate.getFullYear();
-    var dateValue = (year + "-" + month + "-" + day);
-
-    var published;
-    if (req.body.published === undefined){
-       published = "inactive";
-    }
-    else {
-       published = req.body.published;
-    }
-
-    db.run("UPDATE articles SET title =  '" + req.body.title + "', author_id =  '" + req.body.author_id +  "', category_id =  '" + req.body.category_id + "', modified = '" + dateValue + "', created = '" + req.body.created + "', content = '" + req.body.content+ "', published = '" + published+ "' WHERE id = " + id + ";");
-    res.redirect(301, '/articles/'+id);
-
-}); // end app put
-
-// delete an Article
-app.delete('/articles/:id', function(req, res) {
-    res.redirect(301, '/articles');
-
-}); // end app delete
-
-
-// Categories
+// CATEGORIES MODULE ROUTES
 
 //View Categories
 app.get('/categories', function(req, res) {
     
     db.all('SELECT * FROM categories ;', function(err, categories) {
 
-    htmlTemplate = mustache.render(templates.view_categories(), {
-        "templates": templates,
-        "categories": categories
-    });
+        htmlTemplate = mustache.render(templates.view_categories(), {
+            "templates": templates,
+            "categories": categories
+        });
 
         res.send(htmlTemplate);
 
     }); // end DB Select
-
 
 }); // end app get
 
@@ -313,9 +192,9 @@ app.get('/categories/:id', function(req, res) {
  var id = req.params.id;
     
     db.all('SELECT * FROM categories WHERE id = "'+ id + '";', function(err, category) {
-    htmlTemplate = mustache.render(templates.edit_category(), {
-        "templates": templates,
-        "category": category
+        htmlTemplate = mustache.render(templates.edit_category(), {
+            "templates": templates,
+            "category": category
     });
 
     res.send(htmlTemplate);
@@ -346,10 +225,162 @@ app.delete('/categories/delete/:id', function(req, res) {
     res.redirect('/categories');
 }); // end app delete
 
+// ARTICLE MODULE ROUTES
 
-// static routes for calling bootstrap
-app.use(express.static(__dirname + '/bootstrap'));
+//View Articles
+app.get('/articles', function(req, res) {
 
-app.listen(8080, function() {
-    console.log("LISTENING ON PORT 8080!");
-}); // end app listed
+    db.all('SELECT * FROM articles;', function(err, articles) {
+
+        htmlTemplate = mustache.render(templates.view_articles(), {
+            "templates": templates,
+            "articles": articles
+        });
+
+        res.send(htmlTemplate);
+
+    }); // end DB Select
+
+}); // end app get
+
+// Create Article
+app.get('/articles/create', function(req, res) {
+
+    db.all('SELECT * FROM users ;', function(err, users) {   
+        db.all('SELECT * FROM categories ;', function(err, categories) {    
+
+            htmlTemplate = mustache.render(templates.create_article(), {
+                "templates": templates,
+                "users": users,
+                "categories": categories
+            });
+
+            res.send(htmlTemplate);
+        }); // end DB Select
+    }); // end DB Select
+}); // end app get
+
+
+app.post('/articles/create', function(req, res) {
+
+    // get current date
+    var currentDate = new Date();
+    var day = currentDate.getDate();
+    if(day < 10) day = "0" + day;
+    var month = currentDate.getMonth() + 1;
+    if(month < 10) month = "0" + month;
+    var year = currentDate.getFullYear();
+    var dateValue = (year + "-" + month + "-" + day);
+
+    // published checkbox logic
+    var published;
+    if (req.body.published === undefined){
+       published = "inactive";
+    }
+    else {
+       published = req.body.published;
+    }
+
+    db.run("INSERT INTO articles (title, author_id, category_id, content, published, created, modified) VALUES ('" + req.body.title + "','" + req.body.author_id + "','" + req.body.category_id + "','" + req.body.content + "','" + published + "','" + dateValue+ "','" +dateValue+"');");
+
+    res.redirect(301, '/articles');
+
+
+}); // end app get
+
+//View Single Article
+app.get('/articles/:id', function(req, res) {
+    var id = req.params.id;
+    db.all("SELECT * FROM articles WHERE id = '" + id + "';", function(err, article) {
+        htmlTemplate = mustache.render(templates.view_article(), {
+            "templates": templates,
+            "article": article,
+            "id": id
+         });
+
+    res.send(htmlTemplate);
+
+    }); // end DB Select
+
+}); // end app get
+
+// Edit Article
+app.get('/articles/edit/:id', function(req, res) {
+
+    var id = req.params.id;
+    db.all("SELECT * FROM articles WHERE id = '" + id + "';", function(err, article) {
+     db.all('SELECT * FROM users ;', function(err, users) {   
+         db.all('SELECT * FROM categories ;', function(err, categories) {
+
+            htmlTemplate = mustache.render(templates.edit_article(), {
+                "templates": templates,
+                "article": article,
+                "users": users,
+                "categories": categories,
+                "id": id
+            });
+
+        res.send(htmlTemplate);
+
+         }); // end DB Select
+    }); // end DB Select
+}); // end DB Select
+
+}); // end app get
+
+
+// Update an Article
+app.put('/articles/edit/:id', function(req, res) {
+    var id = req.params.id;
+
+    // get modified date
+    var currentDate = new Date();
+    var day = currentDate.getDate();
+    if(day < 10) day = "0" + day;
+    var month = currentDate.getMonth() + 1;
+    if(month < 10) month = "0" + month;
+    var year = currentDate.getFullYear();
+    var dateValue = (year + "-" + month + "-" + day);
+
+    // published checkbox logig 
+    var published;
+    if (req.body.published === undefined){
+       published = "inactive";
+    }
+    else {
+       published = req.body.published;
+    }
+    // write to DB
+    db.run("UPDATE articles SET title =  '" + req.body.title + "', author_id =  '" + req.body.author_id +  "', category_id =  '" + req.body.category_id + "', modified = '" + dateValue + "', created = '" + req.body.created + "', content = '" + req.body.content+ "', published = '" + published+ "' WHERE id = " + id + ";");
+    
+    // send email notification to editor
+    db.all("SELECT email FROM users WHERE id = '" + req.body.author_id + "';", function(err, editor_email) {  
+
+
+        var email = new sendgrid.Email({
+            to: editor_email,
+            from: config.sendgrid_from,
+            subject: "Zwicky Article Update",
+            text: "One of your articles on zwicky has been edited!"
+            });
+
+        console.log(email);
+
+        sendgrid.send(email, function(err, json) {
+          if (err) { return console.log(err); }
+          console.log(json);
+        });
+
+    }); // end db select
+
+    res.redirect(301, '/articles/' + id );
+
+}); // end app put
+
+// delete an Article
+app.delete('/articles/:id', function(req, res) {
+    res.redirect(301, '/articles');
+
+}); // end app delete
+
+// fin :)
