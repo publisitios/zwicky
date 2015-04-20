@@ -376,6 +376,10 @@ app.put('/articles/edit/:id', function(req, res) {
 
 // delete an Article
 app.delete('/articles/:id', function(req, res) {
+
+    var id = req.params.id;
+    db.run("DELETE FROM articles WHERE id = " + id + ";");
+
     res.redirect(301, '/articles');
 
 }); // end app delete

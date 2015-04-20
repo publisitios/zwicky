@@ -28,6 +28,8 @@
                <th>Created</th>
                <th>Modified</th>
                <th>Status</th>
+               <th></th>
+               <th></th>
             </tr>
 {{#articles}}
 <tr>
@@ -37,7 +39,22 @@
                <td>{{created}}</td>
                <td>{{modified}}</td>
                <td><span class="label">{{published}}</span></td>
-               
+               <td>
+               <form action = "/articles/edit/{{id}}" method="GET">
+               <input type ="hidden" value="{{id}}" />
+               <button class="btn btn-small btn-primary">
+                <span class="glyphicon glyphicon-pencil"></span>Edit
+               </button>
+               </form>
+               </td>
+               <td>
+               <form method="POST" action="/articles/{{id}}?_method=DELETE">
+               <input type ="hidden" value="{{id}}" />
+               <button class="btn btn-danger btn-small">
+                Delete
+               </button>
+               </form>
+               </td>
             </tr>
 
 {{/articles}}

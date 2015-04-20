@@ -31,7 +31,7 @@
       <input checked type="checkbox" name="userStatus" value = "active"> Editor is Active
     </label>
   </div>
-  <button type="submit" class="btn btn-default">Add Editor</button>
+  <button type="submit" class="btn btn-primary">Add Editor</button>
 </form>
      
 </div>
@@ -53,12 +53,12 @@
                <td><span class="label">{{status}}</span></td>
                <td>
                   <form method="GET" action="/users/{{id}}">
-                     <button  class="btn btn-info">Edit User</button>
+                     <button  class="btn btn-primary">Edit</button>
                   </form>
                </td>
                <td>
                   <form method="POST" action="/users/delete/{{id}}?_method=DELETE">
-                     <button  class="btn btn-danger" >Delete User</button>
+                     <button  class="btn btn-danger" >Delete</button>
                   </form>
                </td>
             </tr>
