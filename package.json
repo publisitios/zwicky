@@ -4,6 +4,10 @@
   "main": "app.js",
   "author": "Xavier Fernandez",
   "license": "GPL",
+  "repository" :
+  { "type" : "git"
+  , "url" : "https://github.com/publisitios/zwicky.git"
+  },
   "dependencies": {
     "body-parser": "^1.12.2",
     "express": "^4.12.3",
