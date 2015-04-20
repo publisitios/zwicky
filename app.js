@@ -30,10 +30,6 @@ var app = express();
     // static routes for calling bootstrap
     app.use(express.static(__dirname + '/bootstrap'));
 
-    app.listen(8080, function() {
-        console.log("LISTENING ON PORT 8080!");
-    }); 
-
 // CONTENT PAGES ROUTES
 
 // Homepage
@@ -292,6 +288,7 @@ app.post('/articles/create', function(req, res) {
 app.get('/articles/:id', function(req, res) {
     var id = req.params.id;
     db.all("SELECT * FROM articles WHERE id = '" + id + "';", function(err, article) {
+        
         htmlTemplate = mustache.render(templates.view_article(), {
             "templates": templates,
             "article": article,
@@ -309,7 +306,7 @@ app.get('/articles/edit/:id', function(req, res) {
 
     var id = req.params.id;
     db.all("SELECT * FROM articles WHERE id = '" + id + "';", function(err, article) {
-     db.all('SELECT * FROM users ;', function(err, users) {   
+      db.all('SELECT * FROM users ;', function(err, users) {   
          db.all('SELECT * FROM categories ;', function(err, categories) {
 
             htmlTemplate = mustache.render(templates.edit_article(), {
@@ -323,8 +320,8 @@ app.get('/articles/edit/:id', function(req, res) {
         res.send(htmlTemplate);
 
          }); // end DB Select
+      }); // end DB Select
     }); // end DB Select
-}); // end DB Select
 
 }); // end app get
 
@@ -382,5 +379,10 @@ app.delete('/articles/:id', function(req, res) {
     res.redirect(301, '/articles');
 
 }); // end app delete
+
+// start the web server
+    app.listen(config.express_port, function() {
+        console.log("LISTENING ON PORT : " + config.express_port);
+    }); 
 
 // fin :)
