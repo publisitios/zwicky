@@ -1,13 +1,13 @@
 # Zwicky
 ## An Internally facing Wiki for organizations.
-This project is open source:  View on Github](http://en.wikipedia.org/wiki/Fritz_Zwicky)
+This project is open source:  [View on Github](https://github.com/xavier506/zwicky)
 
 Zwicky has been designed to allow you to create and manage Technical Documentation / Manuals and guides and manuals for software. It's basically a website that allows collaborative editing of its content and structure by its users.
 
 Named in Honor of Fritz
 
 [Fritz Zwicky](http://en.wikipedia.org/wiki/Fritz_Zwicky)
-“If ever a competition were held for the most unrecognized genius of twentieth century astronomy, the winner surely would be Fritz Zwicky (1898–1974)” [wikipediay](http://en.wikipedia.org/wiki/Fritz_Zwicky)
+“If ever a competition were held for the most unrecognized genius of twentieth century astronomy, the winner surely would be Fritz Zwicky (1898–1974)” [wikipedia](http://en.wikipedia.org/wiki/Fritz_Zwicky)
 
 
 # Application Features
@@ -45,7 +45,7 @@ The apps diagrams were created using [draw.io](http://en.wikipedia.org/wiki/Frit
 
 #### NPM modules installed
 
-Please reference packaje.json for more details.
+Please reference package.json for more details.
 
 * express version : 4.12.3
 * sqlite3 version : 3.0.5
@@ -54,5 +54,5 @@ Please reference packaje.json for more details.
 * request version : 2.55.0
 * sendgrid version : 1.6.1
 * body-parser : 1.12.2
-* method-override: 2.3.2
-* morgan": 1.5.2
+* method-override : 2.3.2
+* morgan : 1.5.2
