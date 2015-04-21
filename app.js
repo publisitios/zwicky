@@ -227,52 +227,14 @@ app.delete('/categories/delete/:id', function(req, res) {
 app.get('/articles', function(req, res) {
 
     db.all('SELECT * FROM articles;', function(err, articles) { 
-        db.all('SELECT * FROM categories ;', function(err, categories) { 
-            db.all('SELECT * FROM users ;', function(err, users) { 
-
-                var functions ={};
-
-                functions.getUserById = function (user_id){
-                    console.log("looking for user");
-                    users.forEach (function(e){
-                        if (user_id == e.id){ 
-                            console.log(e.name);
-                            return e.name;
-                        }
-                    });
-
-                };
-                functions.getCategoryById = function (category_id){
-
-                        console.log("looking for cats in ID : " + category_id);
-                        console.log("array legnth : " + categories.length);
-                    
-                        categories.forEach (function(e){
-                        console.log(category_id);
-                            if (category_id === e.id){ 
-                                var categoryName = e.name; 
-                                console.log(categoryName);
-                            }
-                        });
-
-                        //return categoryName; render(text)
-                        
-                    };
-                    
 
                 htmlTemplate = mustache.render(templates.view_articles(), {
                     "templates": templates,
                     "articles": articles,
-                    "categories": categories,
-                    "users": users,
-                    "functions" : functions
                 });
-
 
                 res.send(htmlTemplate);
 
-            }); // end DB Select users 
-        }); // end DB Select categories
     }); // end DB Select articles
 
 }); // end app get
@@ -303,7 +265,7 @@ app.get('/articles/:id', function(req, res) {
 }); // end app get
 
 // Create Article
-app.get('/articles/create/', function(req, res) {
+app.get('/article/create', function(req, res) {
 
     db.all('SELECT * FROM users ;', function(err, users) {   
         db.all('SELECT * FROM categories ;', function(err, categories) {    
@@ -320,7 +282,7 @@ app.get('/articles/create/', function(req, res) {
 }); // end app get
 
 // save article
-app.post('/articles/save', function(req, res) {
+app.post('/article/save', function(req, res) {
 
     // get current date
     var currentDate = new Date();
@@ -396,7 +358,7 @@ app.put('/articles/edit/:id', function(req, res) {
        published = req.body.published;
     }
     // write to DB
-    cleanContent = req.body.content.replace(/'/g, "\'");
+    cleanContent = req.body.content.replace(/'/g, "''");
     db.run("UPDATE articles SET title =  '" + req.body.title + "', author_id =  '" + req.body.author_id +  "', category_id =  '" + req.body.category_id + "', modified = '" + dateValue + "', created = '" + req.body.created + "', content = '" + cleanContent + "', published = '" + published+ "' WHERE id = " + id + ";");
     
     // send email notification to editor
