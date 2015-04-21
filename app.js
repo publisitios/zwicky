@@ -230,7 +230,7 @@ app.get('/articles', function(req, res) {
         db.all('SELECT * FROM categories ;', function(err, categories) { 
             db.all('SELECT * FROM users ;', function(err, users) { 
 
-                var functions ={}
+                var functions ={};
 
                 functions.getUserById = function (user_id){
                     console.log("looking for user");
@@ -241,7 +241,7 @@ app.get('/articles', function(req, res) {
                         }
                     });
 
-                }
+                };
                 functions.getCategoryById = function (category_id){
 
                         console.log("looking for cats in ID : " + category_id);
@@ -257,7 +257,7 @@ app.get('/articles', function(req, res) {
 
                         //return categoryName; render(text)
                         
-                    }
+                    };
                     
 
                 htmlTemplate = mustache.render(templates.view_articles(), {
@@ -282,11 +282,13 @@ app.get('/articles/:id', function(req, res) {
     var id = req.params.id;
     db.all("SELECT * FROM articles WHERE id = '" + id + "';", function(err, article) {
 
-        console.log(article);
-        var markdownRender = marked(article[0].content);
-        //var markdownRender = "#woouuw  gyeeeaaa !! ";
-        console.log(markdownRender);
-        
+        if (article[0] !== undefined){
+        markdownRender = marked(article[0].content);}
+        else{
+         markdownRender = "#woouuw  gyeeeaaa !! ";
+        console.log("No Mark Down!");
+        }
+
         htmlTemplate = mustache.render(templates.view_article(), {
             "templates": templates,
             "article": article,
@@ -301,7 +303,7 @@ app.get('/articles/:id', function(req, res) {
 }); // end app get
 
 // Create Article
-app.get('/articles/create', function(req, res) {
+app.get('/articles/create/', function(req, res) {
 
     db.all('SELECT * FROM users ;', function(err, users) {   
         db.all('SELECT * FROM categories ;', function(err, categories) {    
@@ -318,7 +320,7 @@ app.get('/articles/create', function(req, res) {
 }); // end app get
 
 // save article
-app.post('/articles/create', function(req, res) {
+app.post('/articles/save', function(req, res) {
 
     // get current date
     var currentDate = new Date();
@@ -394,12 +396,12 @@ app.put('/articles/edit/:id', function(req, res) {
        published = req.body.published;
     }
     // write to DB
-    cleanContent = req.body.content.replace(/'/g, "''");
+    cleanContent = req.body.content.replace(/'/g, "\'");
     db.run("UPDATE articles SET title =  '" + req.body.title + "', author_id =  '" + req.body.author_id +  "', category_id =  '" + req.body.category_id + "', modified = '" + dateValue + "', created = '" + req.body.created + "', content = '" + cleanContent + "', published = '" + published+ "' WHERE id = " + id + ";");
     
     // send email notification to editor
     db.all("SELECT email FROM users WHERE id = '" + req.body.author_id + "';", function(err, editor_email) {  
-        console.log(editor_email[0].email)
+        console.log(editor_email[0].email);
 
         var email = {
             to: editor_email[0].email, 
