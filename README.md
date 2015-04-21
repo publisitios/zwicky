@@ -1,5 +1,6 @@
 # Zwicky
 ## An Internally facing Wiki for organizations.
+[View Live Demo](https://xavierf.software)
 This project is open source:  [View on Github](https://github.com/xavier506/zwicky)
 
 Zwicky has been designed to allow you to create and manage Technical Documentation / Manuals and guides and manuals for software. It's basically a website that allows collaborative editing of its content and structure by its users.
