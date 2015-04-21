@@ -1,73 +1,58 @@
-# ZWICKY WIKI
-
-
+# Zwicky
 ## An Internally facing Wiki for organizations.
+This project is open source:  View on Github](http://en.wikipedia.org/wiki/Fritz_Zwicky)
 
+Zwicky has been designed to allow you to create and manage Technical Documentation / Manuals and guides and manuals for software. It's basically a website that allows collaborative editing of its content and structure by its users.
 
 Named in Honor of Fritz
 
-Fritz Zwicky
-“If ever a competition were held for the most unrecognized genius of twentieth century astronomy, the winner surely would be Fritz Zwicky (1898–1974)”
-
-wi·ki
-ˈwikē/
-noun
-a website that allows collaborative editing of its content and structure by its users.
+[Fritz Zwicky](http://en.wikipedia.org/wiki/Fritz_Zwicky)
+“If ever a competition were held for the most unrecognized genius of twentieth century astronomy, the winner surely would be Fritz Zwicky (1898–1974)” [wikipediay](http://en.wikipedia.org/wiki/Fritz_Zwicky)
 
 
-#ROUTES
-
-###View Homepage
-
-GET /
-
-The user is prompted to select his username and log in  
-
-He can also select to view the user CRUD page
-
-
-
+# Application Features
 ### Articles
 
-GET
+Articles are documents created by editors and are written in Markdown format. Markdown makes it very easy to read, write, and edit documents. Articles are rendered as HTML a a publishing format; however Markdown is the writing format.
 
-
-View Single Article
-
-GET
-
-POST CREATE Article
-
-
-PUT Edit Article
-
-
-DELETE an Article
-
-DELETE
+Users may Create Read Update and Delete articles in markdown notation.
 
 ### Categories
 
-Create a Category
+Categories represent the different projects and topics for which documentation is created. Categories hold documents assigned to related to the same topic.
 
-Edit a Category
+Users may Create Read Update and Delete categories to organize articles
 
-Delete a Category
+### Editors
+
+Editors are responsible for writing and maintaining the documents assigned to them. Readers may contact the editor via email if they have any questions regarding their content.
+
+Users may Create Read Update and Delete editors.
+
+# Spec and ERD
+The apps diagrams were created using [draw.io](http://en.wikipedia.org/wiki/Fritz_Zwicky) , copies of the diagrams XML files are included in the `docs` folder,
+
+### User Flow Chart
+
+![Image of User Flow Chart](./docs/Zwicky-ERD.png)
+
+### ERD
 
 
+![Image of ERD](./docs/Zwicky-flow.png)
 
-### Users
+## Software Dependencies and Libraries
 
-Create a User
+#### NPM modules installed
 
-Edit a User //  may be better to just create or delete, (what if a user has posts made and is deleted??)
+Please reference packaje.json for more details.
 
-Delete a User
-
-
-
-Dependencies
-
-SendGrid.
-
-marked
+* express version : 4.12.3
+* sqlite3 version : 3.0.5
+* marked version : 0.3.3
+* mustache version : 2.0.0
+* request version : 2.55.0
+* sendgrid version : 1.6.1
+* body-parser : 1.12.2
+* method-override: 2.3.2
+* morgan": 1.5.2
