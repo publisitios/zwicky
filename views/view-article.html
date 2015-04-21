@@ -1,7 +1,6 @@
 {{{templates.header}}}
 
 <!-- there is 9 bootstrap columns max width -->
- <script src="../marked.js"></script>
         <div class="span4">
 
             <h1>View Article</h1>
@@ -40,10 +39,8 @@
             <tr>
 
             <td colspan="5"> 
-            <div id="content" class="well"></div>
-            <script>document.getElementById('content').innerHTML =
-      marked('{{content}}');
-  </script></td>
+            <div class="well">{{{markdownRender}}}</div>
+            </td>
             </tr>
 
 </table>

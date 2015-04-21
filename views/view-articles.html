@@ -31,11 +31,11 @@
                <th></th>
                <th></th>
             </tr>
-{{#articles}}
-<tr>
+            {{#articles}}
+            <tr>
                <td><a title="Click to view this article" href="/articles/{{id}}">{{title}}</a></td>
-               <td>{{category_id}}</td>
-               <td>{{author_id}}</td>
+               <td>{{category_id}}<script>{{functions.getCategoryById}}("{{category_id}}");</script></td>
+               <td></td>
                <td>{{created}}</td>
                <td>{{modified}}</td>
                <td><span class="label">{{published}}</span></td>
@@ -56,8 +56,7 @@
                </form>
                </td>
             </tr>
-
-{{/articles}}
+          {{/articles}}
 
 </table>
 </div>

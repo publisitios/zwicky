@@ -226,14 +226,75 @@ app.delete('/categories/delete/:id', function(req, res) {
 //View Articles
 app.get('/articles', function(req, res) {
 
-    db.all('SELECT * FROM articles;', function(err, articles) {
+    db.all('SELECT * FROM articles;', function(err, articles) { 
+        db.all('SELECT * FROM categories ;', function(err, categories) { 
+            db.all('SELECT * FROM users ;', function(err, users) { 
 
-        htmlTemplate = mustache.render(templates.view_articles(), {
+                var functions ={}
+
+                functions.getUserById = function (user_id){
+                    console.log("looking for user");
+                    users.forEach (function(e){
+                        if (user_id == e.id){ 
+                            console.log(e.name);
+                            return e.name;
+                        }
+                    });
+
+                }
+                functions.getCategoryById = function (category_id){
+
+                        console.log("looking for cats in ID : " + category_id);
+                        console.log("array legnth : " + categories.length);
+                    
+                        categories.forEach (function(e){
+                        console.log(category_id);
+                            if (category_id === e.id){ 
+                                var categoryName = e.name; 
+                                console.log(categoryName);
+                            }
+                        });
+
+                        //return categoryName; render(text)
+                        
+                    }
+                    
+
+                htmlTemplate = mustache.render(templates.view_articles(), {
+                    "templates": templates,
+                    "articles": articles,
+                    "categories": categories,
+                    "users": users,
+                    "functions" : functions
+                });
+
+
+                res.send(htmlTemplate);
+
+            }); // end DB Select users 
+        }); // end DB Select categories
+    }); // end DB Select articles
+
+}); // end app get
+
+//View Single Article
+app.get('/articles/:id', function(req, res) {
+    var id = req.params.id;
+    db.all("SELECT * FROM articles WHERE id = '" + id + "';", function(err, article) {
+
+        console.log(article);
+        var markdownRender = marked(article[0].content);
+        //var markdownRender = "#woouuw  gyeeeaaa !! ";
+        console.log(markdownRender);
+        
+        htmlTemplate = mustache.render(templates.view_article(), {
             "templates": templates,
-            "articles": articles
-        });
+            "article": article,
+            "id": id,
+            "markdownRender": markdownRender
+         });
 
-        res.send(htmlTemplate);
+    res.send(htmlTemplate);
 
     }); // end DB Select
 
@@ -256,7 +317,7 @@ app.get('/articles/create', function(req, res) {
     }); // end DB Select
 }); // end app get
 
-
+// save article
 app.post('/articles/create', function(req, res) {
 
     // get current date
@@ -277,27 +338,12 @@ app.post('/articles/create', function(req, res) {
        published = req.body.published;
     }
 
-    db.run("INSERT INTO articles (title, author_id, category_id, content, published, created, modified) VALUES ('" + req.body.title + "','" + req.body.author_id + "','" + req.body.category_id + "','" + req.body.content + "','" + published + "','" + dateValue+ "','" +dateValue+"');");
+    cleanContent = req.body.content.replace(/'/g, "''");
+
+    db.run("INSERT INTO articles (title, author_id, category_id, content, published, created, modified) VALUES ('" + req.body.title + "','" + req.body.author_id + "','" + req.body.category_id + "','" + cleanContent + "','" + published + "','" + dateValue+ "','" +dateValue+"');");
 
     res.redirect(301, '/articles');
 
-
-}); // end app get
-
-//View Single Article
-app.get('/articles/:id', function(req, res) {
-    var id = req.params.id;
-    db.all("SELECT * FROM articles WHERE id = '" + id + "';", function(err, article) {
-        
-        htmlTemplate = mustache.render(templates.view_article(), {
-            "templates": templates,
-            "article": article,
-            "id": id
-         });
-
-    res.send(htmlTemplate);
-
-    }); // end DB Select
 
 }); // end app get
 
@@ -348,18 +394,19 @@ app.put('/articles/edit/:id', function(req, res) {
        published = req.body.published;
     }
     // write to DB
-    db.run("UPDATE articles SET title =  '" + req.body.title + "', author_id =  '" + req.body.author_id +  "', category_id =  '" + req.body.category_id + "', modified = '" + dateValue + "', created = '" + req.body.created + "', content = '" + req.body.content+ "', published = '" + published+ "' WHERE id = " + id + ";");
+    cleanContent = req.body.content.replace(/'/g, "''");
+    db.run("UPDATE articles SET title =  '" + req.body.title + "', author_id =  '" + req.body.author_id +  "', category_id =  '" + req.body.category_id + "', modified = '" + dateValue + "', created = '" + req.body.created + "', content = '" + cleanContent + "', published = '" + published+ "' WHERE id = " + id + ";");
     
     // send email notification to editor
     db.all("SELECT email FROM users WHERE id = '" + req.body.author_id + "';", function(err, editor_email) {  
+        console.log(editor_email[0].email)
 
-
-        var email = new sendgrid.Email({
-            to: editor_email,
+        var email = {
+            to: editor_email[0].email, 
             from: config.sendgrid_from,
             subject: "Zwicky Article Update",
             text: "One of your articles on zwicky has been edited!"
-            });
+            };
 
         console.log(email);
 
