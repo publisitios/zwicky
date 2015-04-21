@@ -39,7 +39,7 @@ The apps diagrams were created using [draw.io](http://en.wikipedia.org/wiki/Frit
 ### ERD
 
 
-![Image of ERD](./docs/Zwicky-flow.png)
+![Image of ERD](./docs/Zwicky_flow.png)
 
 ## Software Dependencies and Libraries
 
