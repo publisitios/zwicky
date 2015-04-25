@@ -57,3 +57,5 @@ Please reference package.json for more details.
 * body-parser : 1.12.2
 * method-override : 2.3.2
 * morgan : 1.5.2
+
+* bootstrap HTML, CSS, and JS framework
