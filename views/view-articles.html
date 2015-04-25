@@ -1,64 +1,54 @@
 {{{templates.header}}}
-
 <!-- there is 9 bootstrap columns max width -->
-        <div class="span4">
-
-            <h1>Articles</h1>
+<div class="span4">
+   <h1>Articles</h1>
    <p>Articles are documents created by editors and are written in Markdown format. Markdown makes it very easy to read, write, and edit documents. Articles are rendered as HTML a a publishing format; howvever Markdown is the writing format.</p>
-   
-        </div>
-
-<div class="span5">
-<br/><br/><br/>
-
-   <form action = "/article/create" method="GET">
- 
- <button class="btn btn-primary btn-large">Write an Article</button>
-</form>
-     
 </div>
-
+<div class="span5">
+   <br/><br/><br/>
+   <form action = "/article/create" method="GET">
+      <button class="btn btn-primary btn-large">Write an Article</button>
+   </form>
+</div>
 <div class="span9">
-    <h3>View Articles</h3>
-      <table class="table table-hover">
-            <tr>
-               <th>Title</th>
-               <th>Category </th>
-               <th>Editor </th>
-               <th>Created</th>
-               <th>Modified</th>
-               <th>Status</th>
-               <th></th>
-               <th></th>
-            </tr>
-            {{#articles}}
-            <tr>
-               <td><a title="Click to view this article" href="/articles/{{id}}"><b>{{title}}<b></a></td>
-               <td>{{category_id}}</td>
-               <td>{{author_id}}</td>
-               <td>{{created}}</td>
-               <td>{{modified}}</td>
-               <td><span class="label">{{published}}</span></td>
-               <td>
-               <form action = "/articles/edit/{{id}}" method="GET">
+   <h3>View Articles</h3>
+   <table class="table table-hover">
+      <tr>
+         <th>Title</th>
+         <th>Category </th>
+         <th>Editor </th>
+         <th>Created</th>
+         <th>Modified</th>
+         <th>Status</th>
+         <th></th>
+         <th></th>
+      </tr>
+      {{#articles}}
+      <tr>
+         <td><a title="Click to view this article" href="/articles/{{id}}"><b>{{title}}<b></a></td>
+         <td>{{category_id}}</td>
+         <td>{{author_id}}</td>
+         <td>{{created}}</td>
+         <td>{{modified}}</td>
+         <td><span class="label">{{published}}</span></td>
+         <td>
+            <form action = "/articles/edit/{{id}}" method="GET">
                <input type ="hidden" value="{{id}}" />
                <button class="btn btn-small btn-primary">
-                <span class="glyphicon glyphicon-pencil"></span>Edit
+               <span class="glyphicon glyphicon-pencil"></span>Edit
                </button>
-               </form>
-               </td>
-               <td>
-               <form method="POST" action="/articles/{{id}}?_method=DELETE">
+            </form>
+         </td>
+         <td>
+            <form method="POST" action="/articles/{{id}}?_method=DELETE">
                <input type ="hidden" value="{{id}}" />
                <button class="btn btn-danger btn-small">
-                Delete
+               Delete
                </button>
-               </form>
-               </td>
-            </tr>
-          {{/articles}}
-
-</table>
+            </form>
+         </td>
+      </tr>
+      {{/articles}}
+   </table>
 </div>
-
 {{{templates.footer}}}

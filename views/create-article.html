@@ -1,49 +1,42 @@
 {{{templates.header}}}
-        <div class="span4">
-                      <h1>Create an Article</h1>
+<div class="span4">
+   <h1>Create an Article</h1>
    <p>Articles are documents created by editors and are written in Markdown format. Markdown makes it very easy to read, write, and edit documents. Articles are rendered as HTML a a publishing format; howvever Markdown is the writing format.</p>
-        </div> 
-
-  <div class="span5">
-<form action = "/article/save" method="POST">
-  <div class="form-group">
-    <label for="articleAutor">Article Editor</label>
-<select name="author_id">
-{{#users}}
-  <option value="{{id}}">{{name}}</option>
- {{/users}}
-</select>
-  </div>
-  <div class="form-group">
-    <label for="categories">Category</label>
-   <select name="category_id">
-{{#categories}}
-  <option value="{{id}}">{{name}}</option>
- {{/categories}}
-</select>
-  </div>
-    <div class="checkbox">
-    <label>
-      <input value = "active" checked type="checkbox" name="published"> Article is Published
-    </label>
-  </div>
-
-
-  </div>   
-
-  <div class="span9">
-  <div class="form-group">
-    <label for="articleTitle">Title</label>
-    <input type="text" placeholder="Enter the title of your article" name="title" class="form-control span9" required />
-  </div>
+</div>
+<div class="span5">
+   <form action = "/article/save" method="POST">
+      <div class="form-group">
+         <label for="articleAutor">Article Editor</label>
+         <select name="author_id">
+            {{#users}}
+            <option value="{{id}}">{{name}}</option>
+            {{/users}}
+         </select>
+      </div>
+      <div class="form-group">
+         <label for="categories">Category</label>
+         <select name="category_id">
+            {{#categories}}
+            <option value="{{id}}">{{name}}</option>
+            {{/categories}}
+         </select>
+      </div>
+      <div class="checkbox">
+         <label>
+         <input value = "active" checked type="checkbox" name="published"> Article is Published
+         </label>
+      </div>
+</div>
+<div class="span9">
 <div class="form-group">
-  <label for="content">Enter your Markdown Code Below:</label>
-  <textarea class="span9" class="form-control"  rows="20" name="content"></textarea>
-    <button class="btn btn-primary btn-large">Save Article</button>
-  </div>
-
-  </form>
-
-  </div>      
-         
+<label for="articleTitle">Title</label>
+<input type="text" placeholder="Enter the title of your article" name="title" class="form-control span9" required />
+</div>
+<div class="form-group">
+<label for="content">Enter your Markdown Code Below:</label>
+<textarea class="span9" class="form-control"  rows="20" name="content"></textarea>
+<button class="btn btn-primary btn-large">Save Article</button>
+</div>
+</form>
+</div>      
 {{{templates.footer}}}

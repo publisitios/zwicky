@@ -7,7 +7,6 @@ var templates = require("./views.js");
 // load application dependencies 
 var express = require('express');
 var sqlite3 = require('sqlite3');
-var fs = require('fs');
 var mustache = require('mustache');
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
@@ -225,6 +224,9 @@ app.delete('/categories/delete/:id', function(req, res) {
 
 //View Articles
 app.get('/articles', function(req, res) {
+
+// this query should be something like this : 
+// SELECT * FROM articles LEFT JOIN categories WHERE category_id=track(articles)ID AND LEFT JOIN users WHERE userID=track(articles)ID GROUP BY articles ORDER BY (might have to put latest)modified
 
     db.all('SELECT * FROM articles;', function(err, articles) { 
 
