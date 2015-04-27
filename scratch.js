@@ -2,6 +2,22 @@ var sqlite3 = require('sqlite3');
 // SQLite conection 
 var db = new sqlite3.Database('./zwicky.db');
 
+//SELECT * FROM articles LEFT JOIN categories WHERE category_id=track(articles)ID AND LEFT JOIN users WHERE userID=track(articles)ID GROUP BY articles ORDER BY (might have to put latest)modified
+//
+/*
+SELECT  *
+FROM articles
+LEFT JOIN users
+ON articles.author_id = users.id;
+*/
+
+// this query should be something like this : 
+db.all('SELECT * FROM articles LEFT JOIN editors ON articles.editor_id = editors.editor_id LEFT JOIN categories ON articles.category_id = categories.cat_id;', function(err, articles) { 
+console.log(articles);
+ }); // end DB  
+
+
+/*
         db.all('SELECT * FROM categories ;', function(err, categories) { 
             db.all('SELECT * FROM users ;', function(err, users) { 
 
@@ -35,3 +51,4 @@ var db = new sqlite3.Database('./zwicky.db');
                     };
               }); // end DB Select users 
         }); // end DB Select categories
+*/

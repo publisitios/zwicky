@@ -6,7 +6,7 @@
 </div>
 <div class="span5">
    <h3>Add Category</h3>
-   <form action = "/categories/create" method="POST">
+   <form action = "/categories" method="POST">
       <div class="form-group">
          <label for="Name">Category Name</label>
          <input type="text" class="form-control" name="catName" placeholder="Enter category name" required />
@@ -37,16 +37,16 @@
       </tr>
       {{#categories}}
       <tr>
-         <td>{{name}}</td>
-         <td>{{notes}}</td>
-         <td><span class="label">{{status}}</span></td>
+         <td>{{cat_name}}</td>
+         <td>{{cat_notes}}</td>
+         <td><span class="label">{{cat_status}}</span></td>
          <td>
-            <form method="GET" action="/categories/{{id}}">
+            <form method="GET" action="/categories/{{cat_id}}">
                <button  class="btn btn-primary">Edit</button>
             </form>
          </td>
          <td>
-            <form method="POST" action="/categories/delete/{{id}}?_method=DELETE">
+            <form method="POST" action="/categories/{{cat_id}}?_method=DELETE">
                <button  class="btn btn-danger" >Delete</button>
             </form>
          </td>

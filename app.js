@@ -67,14 +67,14 @@ app.get('/markdown', function(req, res) {
 
 // USER MODULE ROUTES
 
-// Manage Users
-app.get('/users', function(req, res) {
+// Manage Editors
+app.get('/editors', function(req, res) {
 
-    db.all('SELECT * FROM users;', function(err, users) {
+    db.all('SELECT * FROM editors;', function(err, editors) {
 
-    htmlTemplate = mustache.render(templates.view_users(), {
+    htmlTemplate = mustache.render(templates.view_editors(), {
         "templates": templates,
-        "users": users
+        "editors": editors
     });
 
         res.send(htmlTemplate);
@@ -84,32 +84,32 @@ app.get('/users', function(req, res) {
 }); // end app get
 
 // Create a User
-app.post('/users/create', function(req, res) {
+app.post('/editors/new', function(req, res) {
 
-    userName = req.body.userName;
-    userEmail = req.body.userEmail;
+    editorName = req.body.editorName;
+    editorEmail = req.body.editorEmail;
     
-    if (req.body.userStatus === undefined){
-       userStatus = "inactive";
+    if (req.body.editorStatus === undefined){
+       editorStatus = "inactive";
     }
     else {
-       userStatus = req.body.userStatus;
+       editorStatus = req.body.editorStatus;
     }
 
-    db.run("INSERT INTO users (name, email, status) VALUES ('" + userName + "','" + userEmail + "','" + userStatus + "');");
+    db.run("INSERT INTO editors (editor_name, editor_email, editor_status) VALUES ('" + editorName + "','" + editorEmail + "','" + editorStatus + "');");
 
-    res.redirect(301, '/users');
+    res.redirect(301, '/editors');
 
 }); // end app delete
 
-// View a User
-app.get    ('/users/:id', function(req, res) {
-    var id = req.params.id;
+// View a Editor
+app.get    ('/editors/:editor_id', function(req, res) {
+    var editor_id = req.params.editor_id;
     
-    db.all('SELECT * FROM users WHERE id = "'+ id + '";', function(err, users) {
-    htmlTemplate = mustache.render(templates.edit_user(), {
+    db.all('SELECT * FROM editors WHERE editor_id = "'+ editor_id + '";', function(err, editors) {
+    htmlTemplate = mustache.render(templates.edit_editor(), {
         "templates": templates,
-        "users": users
+        "editors": editors
     });
 
     res.send(htmlTemplate);
@@ -119,29 +119,29 @@ app.get    ('/users/:id', function(req, res) {
 }); // end app put
 
 // Edit  a User
-app.put('/users/edit/:id', function(req, res) {
+app.put('/editors/:editor_id', function(req, res) {
     
-    var id = req.params.id;
-    var userStatus;
-    if (req.body.userStatus === undefined){
-       userStatus = "inactive";
+    var editor_id = req.params.editor_id;
+    var editorStatus;
+    if (req.body.editorStatus === undefined){
+       editorStatus = "inactive";
     }
     else {
-       userStatus = req.body.userStatus;
+       editorStatus = req.body.editorStatus;
     }
 
-    db.run("UPDATE users SET name =  '" + req.body.userName + "', email =  '" + req.body.userEmail +  "', status =  '" + userStatus + "' WHERE id = " + id + ";");
+    db.run("UPDATE editors SET editor_name =  '" + req.body.editorName + "', editor_email =  '" + req.body.editorEmail +  "', editor_status =  '" + editorStatus + "' WHERE editor_id = " + editor_id + ";");
     
-    res.redirect(301, '/users');
+    res.redirect(301, '/editors');
 
 }); // end app put
 
 // delete a User
-app.delete('/users/delete/:id', function(req, res) {
+app.delete('/editors/:editor_id', function(req, res) {
 
-    var id = req.params.id;
-    db.run("DELETE FROM users WHERE id = " + id + ";");
-    res.redirect('/users');
+    var editor_id = req.params.editor_id;
+    db.run("DELETE FROM editors WHERE editor_id = " + editor_id + ";");
+    res.redirect('/editors');
 
 }); // end app delete
 
@@ -151,7 +151,7 @@ app.delete('/users/delete/:id', function(req, res) {
 //View Categories
 app.get('/categories', function(req, res) {
     
-    db.all('SELECT * FROM categories ;', function(err, categories) {
+    db.all('SELECT * FROM categories;', function(err, categories) {
 
         htmlTemplate = mustache.render(templates.view_categories(), {
             "templates": templates,
@@ -165,7 +165,7 @@ app.get('/categories', function(req, res) {
 }); // end app get
 
 // Create a Category
-app.post('/categories/create', function(req, res) {
+app.post('/categories', function(req, res) {
 
     var catStatus;
     if (req.body.catStatus === undefined){
@@ -175,18 +175,18 @@ app.post('/categories/create', function(req, res) {
        catStatus = req.body.catStatus;
     }
 
-    db.run("INSERT INTO categories (name, notes, status) VALUES ('" + req.body.catName + "','" + req.body.catNotes + "','" + catStatus + "');");
+    db.run("INSERT INTO categories (cat_name, cat_notes, cat_status) VALUES ('" + req.body.catName + "','" + req.body.catNotes + "','" + catStatus + "');");
 
     res.redirect(301, '/categories');
 
 }); // end app post
 
 //View  a Category
-app.get('/categories/:id', function(req, res) {
+app.get('/categories/:cat_id', function(req, res) {
 
- var id = req.params.id;
+ var cat_id = req.params.cat_id;
     
-    db.all('SELECT * FROM categories WHERE id = "'+ id + '";', function(err, category) {
+    db.all('SELECT * FROM categories WHERE cat_id = "'+ cat_id + '";', function(err, category) {
         htmlTemplate = mustache.render(templates.edit_category(), {
             "templates": templates,
             "category": category
@@ -199,8 +199,8 @@ app.get('/categories/:id', function(req, res) {
 }); // end app get
 
 // Edit a Category
-app.put('/categories/edit/:id', function(req, res) {
-    var id = req.params.id;
+app.put('/categories/:catID', function(req, res) {
+    var catID = req.params.catID;
     var catStatus;
     if (req.body.catStatus === undefined){
        catStatus = "inactive";
@@ -208,15 +208,15 @@ app.put('/categories/edit/:id', function(req, res) {
     else {
        catStatus = req.body.catStatus;
     }
-    db.run("UPDATE categories SET name = '" + req.body.catName + "', notes =  '" + req.body.catNotes +  "', status =  '" + catStatus + "' WHERE id = " + id + ";");
+    db.run("UPDATE categories SET cat_name = '" + req.body.catName + "', cat_notes =  '" + req.body.catNotes +  "', cat_status =  '" + catStatus + "' WHERE cat_id = " + catID + ";");
     res.redirect(301, '/categories');
 
 }); // end app put
 
 // Delete an Category
-app.delete('/categories/delete/:id', function(req, res) {
-    var id = req.params.id;
-    db.run("DELETE FROM categories WHERE id = " + id + ";");
+app.delete('/categories/:catID', function(req, res) {
+    var catID = req.params.catID;
+    db.run("DELETE FROM categories WHERE cat_id = " + catID + ";");
     res.redirect('/categories');
 }); // end app delete
 
@@ -225,11 +225,7 @@ app.delete('/categories/delete/:id', function(req, res) {
 //View Articles
 app.get('/articles', function(req, res) {
 
-// this query should be something like this : 
-// SELECT * FROM articles LEFT JOIN categories WHERE category_id=track(articles)ID AND LEFT JOIN users WHERE userID=track(articles)ID GROUP BY articles ORDER BY (might have to put latest)modified
-
-    db.all('SELECT * FROM articles;', function(err, articles) { 
-
+    db.all('SELECT * FROM articles LEFT JOIN editors ON articles.editor_id = editors.editor_id LEFT JOIN categories ON articles.category_id = categories.cat_id', function(err, articles) { 
                 htmlTemplate = mustache.render(templates.view_articles(), {
                     "templates": templates,
                     "articles": articles,
@@ -241,40 +237,15 @@ app.get('/articles', function(req, res) {
 
 }); // end app get
 
-//View Single Article
-app.get('/articles/:id', function(req, res) {
-    var id = req.params.id;
-    db.all("SELECT * FROM articles WHERE id = '" + id + "';", function(err, article) {
-
-        if (article[0] !== undefined){
-        markdownRender = marked(article[0].content);}
-        else{
-         markdownRender = "#woouuw  gyeeeaaa !! ";
-        console.log("No Mark Down!");
-        }
-
-        htmlTemplate = mustache.render(templates.view_article(), {
-            "templates": templates,
-            "article": article,
-            "id": id,
-            "markdownRender": markdownRender
-         });
-
-    res.send(htmlTemplate);
-
-    }); // end DB Select
-
-}); // end app get
-
 // Create Article
-app.get('/article/create', function(req, res) {
+app.get('/articles/new', function(req, res) {
 
-    db.all('SELECT * FROM users ;', function(err, users) {   
+    db.all('SELECT * FROM editors ;', function(err, editors) {   
         db.all('SELECT * FROM categories ;', function(err, categories) {    
 
             htmlTemplate = mustache.render(templates.create_article(), {
                 "templates": templates,
-                "users": users,
+                "editors": editors,
                 "categories": categories
             });
 
@@ -284,7 +255,7 @@ app.get('/article/create', function(req, res) {
 }); // end app get
 
 // save article
-app.post('/article/save', function(req, res) {
+app.post('/articles', function(req, res) {
 
     // get current date
     var currentDate = new Date();
@@ -306,27 +277,53 @@ app.post('/article/save', function(req, res) {
 
     cleanContent = req.body.content.replace(/'/g, "''");
 
-    db.run("INSERT INTO articles (title, author_id, category_id, content, published, created, modified) VALUES ('" + req.body.title + "','" + req.body.author_id + "','" + req.body.category_id + "','" + cleanContent + "','" + published + "','" + dateValue+ "','" +dateValue+"');");
+    db.run("INSERT INTO articles (title, editor_id, category_id, content, published, created, modified) VALUES ('" + req.body.title + "','" + req.body.editor_id + "','" + req.body.category_id + "','" + cleanContent + "','" + published + "','" + dateValue+ "','" +dateValue+"');");
 
     res.redirect(301, '/articles');
 
 
 }); // end app get
 
-// Edit Article
-app.get('/articles/edit/:id', function(req, res) {
+//View Single Article
+app.get('/articles/:articleID', function(req, res) {
+    var articleID = req.params.articleID;
 
-    var id = req.params.id;
-    db.all("SELECT * FROM articles WHERE id = '" + id + "';", function(err, article) {
-      db.all('SELECT * FROM users ;', function(err, users) {   
+    db.all("SELECT * FROM articles LEFT JOIN editors ON articles.editor_id = editors.editor_id LEFT JOIN categories ON articles.category_id = categories.cat_id WHERE articles.id = '" + articleID + "';", function(err, article) {
+        console.log(article);
+        if (article !== undefined && article.length > 1 ){
+        markdownRender = marked(article[0].content)}
+        else{
+        markdownRender = "#There is NO MarkDown !! ";
+        console.log("No Mark Down!");
+        }
+
+        htmlTemplate = mustache.render(templates.view_article(), {
+            "templates": templates,
+            "article": article,
+            "articleID": articleID,
+            "markdownRender": markdownRender
+         });
+
+    res.send(htmlTemplate);
+
+    }); // end DB Select
+
+}); // end app get
+
+// Edit Article
+app.get('/articles/:articleID/edit', function(req, res) {
+
+    var articleID = req.params.articleID;
+    db.all("SELECT * FROM articles WHERE id = '" + articleID + "';", function(err, article) {
+      db.all('SELECT * FROM editors ;', function(err, editors) {   
          db.all('SELECT * FROM categories ;', function(err, categories) {
 
             htmlTemplate = mustache.render(templates.edit_article(), {
                 "templates": templates,
                 "article": article,
-                "users": users,
+                "editors": editors,
                 "categories": categories,
-                "id": id
+                "articleID": articleID
             });
 
         res.send(htmlTemplate);
@@ -339,8 +336,8 @@ app.get('/articles/edit/:id', function(req, res) {
 
 
 // Update an Article
-app.put('/articles/edit/:id', function(req, res) {
-    var id = req.params.id;
+app.put('/articles/:articleID', function(req, res) {
+    var articleID = req.params.articleID;
 
     // get modified date
     var currentDate = new Date();
@@ -361,10 +358,10 @@ app.put('/articles/edit/:id', function(req, res) {
     }
     // write to DB
     cleanContent = req.body.content.replace(/'/g, "''");
-    db.run("UPDATE articles SET title =  '" + req.body.title + "', author_id =  '" + req.body.author_id +  "', category_id =  '" + req.body.category_id + "', modified = '" + dateValue + "', created = '" + req.body.created + "', content = '" + cleanContent + "', published = '" + published+ "' WHERE id = " + id + ";");
+    db.run("UPDATE articles SET title =  '" + req.body.title + "', editor_id =  '" + req.body.editor_id +  "', category_id =  '" + req.body.category_id + "', modified = '" + dateValue + "', created = '" + req.body.created + "', content = '" + cleanContent + "', published = '" + published+ "' WHERE id = " + articleID + ";");
     
     // send email notification to editor
-    db.all("SELECT email FROM users WHERE id = '" + req.body.author_id + "';", function(err, editor_email) {  
+    db.all("SELECT editor_email FROM editors WHERE editor_id = '" + req.body.editor_id + "';", function(err, editor_email) {  
         console.log(editor_email[0].email);
 
         var email = {
@@ -383,15 +380,15 @@ app.put('/articles/edit/:id', function(req, res) {
 
     }); // end db select
 
-    res.redirect(301, '/articles/' + id );
+    res.redirect(301, '/articles/' + articleID );
 
 }); // end app put
 
 // delete an Article
-app.delete('/articles/:id', function(req, res) {
+app.delete('/articles/:articleID', function(req, res) {
 
-    var id = req.params.id;
-    db.run("DELETE FROM articles WHERE id = " + id + ";");
+    var articleID = req.params.articleID;
+    db.run("DELETE FROM articles WHERE id = " + articleID + ";");
 
     res.redirect(301, '/articles');
 

@@ -4,20 +4,20 @@
    <p>Articles are documents created by editors and are written in Markdown format. Markdown makes it very easy to read, write, and edit documents. Articles are rendered as HTML a a publishing format; howvever Markdown is the writing format.</p>
 </div>
 <div class="span5">
-   <form action = "/article/save" method="POST">
+   <form action = "/articles" method="POST">
       <div class="form-group">
-         <label for="articleAutor">Article Editor</label>
-         <select name="author_id">
-            {{#users}}
-            <option value="{{id}}">{{name}}</option>
-            {{/users}}
+         <label for="articleEditor">Article Editor</label>
+         <select name="editor_id">
+            {{#editors}}
+            <option value="{{editor_id}}">{{editor_name}}</option>
+            {{/editors}}
          </select>
       </div>
       <div class="form-group">
          <label for="categories">Category</label>
          <select name="category_id">
             {{#categories}}
-            <option value="{{id}}">{{name}}</option>
+            <option value="{{cat_id}}">{{cat_name}}</option>
             {{/categories}}
          </select>
       </div>

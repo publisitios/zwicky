@@ -6,7 +6,7 @@
 </div>
 <div class="span5">
    <br/><br/><br/>
-   <form action = "/article/create" method="GET">
+   <form action = "/articles/new" method="GET">
       <button class="btn btn-primary btn-large">Write an Article</button>
    </form>
 </div>
@@ -26,13 +26,13 @@
       {{#articles}}
       <tr>
          <td><a title="Click to view this article" href="/articles/{{id}}"><b>{{title}}<b></a></td>
-         <td>{{category_id}}</td>
-         <td>{{author_id}}</td>
+         <td>{{cat_name}}</td>
+         <td>{{editor_name}}</td>
          <td>{{created}}</td>
          <td>{{modified}}</td>
          <td><span class="label">{{published}}</span></td>
          <td>
-            <form action = "/articles/edit/{{id}}" method="GET">
+            <form action = "/articles/{{id}}/edit" method="GET">
                <input type ="hidden" value="{{id}}" />
                <button class="btn btn-small btn-primary">
                <span class="glyphicon glyphicon-pencil"></span>Edit

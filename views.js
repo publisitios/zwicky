@@ -23,12 +23,12 @@ module.exports = {
     var template = fs.readFileSync('./views/markdown.html', 'utf-8'); // load HTML template
     return template;
   },
-  view_users: function() {
-    var template = fs.readFileSync('./views/view-users.html', 'utf-8'); // load HTML template
+  view_editors: function() {
+    var template = fs.readFileSync('./views/view-editors.html', 'utf-8'); // load HTML template
     return template;
   },
-  edit_user: function() {
-    var template = fs.readFileSync('./views/edit-users.html', 'utf-8'); // load HTML template
+  edit_editor: function() {
+    var template = fs.readFileSync('./views/edit-editors.html', 'utf-8'); // load HTML template
     return template;
   },
   view_categories: function() {

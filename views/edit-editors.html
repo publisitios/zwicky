@@ -11,16 +11,16 @@
 <div class="span5">
    {{#editors}}
    <h3>Update Editor</h3>
-   <form action = "/editors/edit/{{editor_id}}?_method=PUT" method="POST">
+   <form action = "/editors/{{editor_id}}?_method=PUT" method="POST">
       <input type="hidden" name="editor_id" value="{{editor_id}}" />
       <div class="form-group">
          <label for="Name">Full Name</label>
-         <input type="text" class="form-control" name="userName" value="{{editor_name}}" required />
+         <input type="text" class="form-control" name="editorName" value="{{editor_name}}" required />
       </div>
       <div >
          <label for="Email">Email address</label>
          <div class="input-group">
-            <input type="email" class="form-control" name="userEmail" value="{{editor_email}}" required />
+            <input type="email" class="form-control" name="editorEmail" value="{{editor_email}}" required />
          </div>
       </div>
       <div class="checkbox">

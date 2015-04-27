@@ -2,10 +2,10 @@
 <!-- there is 9 bootstrap columns max width -->
 <div class="span4">
    <h1>View Article</h1>
-   <p>Articles are documents created by editors and are written in Markdown format. Markdown makes it very easy to read, write, and edit documents. Articles are rendered as HTML a a publishing format; howvever Markdown is the writing format.</p>
+   <p>Articles are documents created by editors and are written in Markdown format. Markdown makes it very easy to read, write, and edit documents. Articles are rendered as HTML a a publishing format; however Markdown is the writing format.</p>
 </div>
 <div class="span5">
-   <form action = "/articles/edit/{{id}}" method="GET">
+   <form action = "/articles/{{articleID}}/edit" method="GET">
       <br/><br/><br/>
       <button type="submit" class="btn btn-primary btn-large">Edit This Article</button>
    </form>
@@ -15,15 +15,15 @@
    <h3>{{title}}</h3>
    <table class="table">
       <tr>
-         <th>Category </th>
-         <th>Author </th>
+         <th>Category</th>
+         <th>Author</th>
          <th>Created</th>
          <th>Modified</th>
          <th>Status</th>
       </tr>
       <tr>
-         <td>{{category_id}}</td>
-         <td>{{author_id}}</td>
+         <td>{{cat_name}}</td>
+         <td>{{editor_name}}</td>
          <td>{{created}}</td>
          <td>{{modified}}</td>
          <td><span class="label">{{published}}</span></td>

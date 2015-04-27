@@ -10,15 +10,15 @@
 </div>
 <div class="span5">
    <h3>Add Editor</h3>
-   <form action = "/editors" method="POST">
+   <form action = "/editors/new" method="POST">
       <div class="form-group">
          <label for="Name">Full Name</label>
-         <input type="text" class="form-control" name="userName" placeholder="Enter full name" required />
+         <input type="text" class="form-control" name="editorName" placeholder="Enter full name" required />
       </div>
       <div >
          <label for="Email">Email address</label>
          <div class="input-group">
-            <input type="email" class="form-control" name="userEmail" placeholder="Enter email" required />
+            <input type="email" class="form-control" name="editorEmail" placeholder="Enter email" required />
          </div>
       </div>
       <div class="checkbox">
@@ -39,13 +39,13 @@
          <th> </th>
          <th> </th>
       </tr>
-      {{#editors}
+      {{#editors}}
       <tr>
          <td>{{editor_name}}</td>
          <td>{{editor_email}}</td>
          <td><span class="label">{{editor_status}}</span></td>
          <td>
-            <form method="GET" action="/editors/{{editor_id}}/edit">
+            <form method="GET" action="/editors/{{editor_id}}">
                <button  class="btn btn-primary">Edit</button>
             </form>
          </td>
