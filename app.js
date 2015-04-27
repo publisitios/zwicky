@@ -290,7 +290,7 @@ app.get('/articles/:articleID', function(req, res) {
 
     db.all("SELECT * FROM articles LEFT JOIN editors ON articles.editor_id = editors.editor_id LEFT JOIN categories ON articles.category_id = categories.cat_id WHERE articles.id = '" + articleID + "';", function(err, article) {
         console.log(article);
-        if (article !== undefined && article.length > 1 ){
+        if (article !== undefined ){
         markdownRender = marked(article[0].content)}
         else{
         markdownRender = "#There is NO MarkDown !! ";
