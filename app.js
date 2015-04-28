@@ -394,6 +394,27 @@ app.delete('/articles/:articleID', function(req, res) {
 
 }); // end app delete
 
+//Search Articles
+app.get('/search', function(req, res) {
+
+    var search = req.query.search;
+
+    console.log(search);
+
+    db.all("SELECT * FROM articles LEFT JOIN editors ON articles.editor_id = editors.editor_id LEFT JOIN categories ON articles.category_id = categories.cat_id WHERE content LIKE '%" + search + "%';", function(err, articles) { 
+                htmlTemplate = mustache.render(templates.view_articles(), {
+                    "templates": templates,
+                    "articles": articles,
+                });
+
+    console.log(articles);
+
+                res.send(htmlTemplate);
+
+    }); // end DB Select articles
+
+}); // end app get
+
 // start the web server
     app.listen(config.express_port, function() {
         console.log("LISTENING ON PORT : " + config.express_port);

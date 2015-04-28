@@ -64,8 +64,16 @@
       <div class="container-fluid">
       <div class="row-fluid">
       <div class="span3">
-         <div class="well sidebar-nav">
+            <div class="well sidebar-nav">
             <ul class="nav nav-list">
+               <form class="form-search" method="GET" action="/search" />
+                  <div class="input-group">
+                     <input type="text" name="search" class="input-medium form-group search-query" placeholder="Search documents for...">
+                     <span class="input-group-btn">
+                        <button class="btn btn-default" >Go!</button>
+                     </span>
+                  </div>
+               </form>
                <li class="nav-header"><br/></li>
                <li class="nav-header">Articles</li>
                <li><a href="/articles">View Articles</a></li>
@@ -75,7 +83,7 @@
                <li class="nav-header">Editors</li>
                <li><a href="/editors">Manage Editors</a></li>
             </ul>
-            <br/><br/><br/><br/>
+            <br/><br/>
          </div>
          <!--/.well -->
       </div>
