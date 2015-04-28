@@ -33,14 +33,15 @@ Users may Create Read Update and Delete editors.
 # Spec and ERD
 The apps diagrams were created using [draw.io](http://en.wikipedia.org/wiki/Fritz_Zwicky) , copies of the diagrams XML files are included in the `docs` folder,
 
-### User Flow Chart
+### ERD
 
 ![Image of User Flow Chart](./docs/Zwicky-ERD.png)
 
-### ERD
 
+### User Flow Chart
 
 ![Image of ERD](./docs/Zwicky_flow.png)
+
 
 ## Software Dependencies and Libraries
 
